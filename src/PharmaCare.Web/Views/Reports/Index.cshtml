@@ -1,0 +1,19 @@
+@{ ViewData["Title"] = "Báo cáo"; }
+<h3 class="mb-3">Báo cáo doanh thu &amp; tồn kho</h3>
+<div class="row g-3 mb-4">
+    <div class="col-md-6"><div class="card"><div class="card-body">
+        <div class="text-muted small">Tổng doanh thu (tất cả hóa đơn hoàn tất)</div>
+        <div class="fs-4 fw-bold">@(((decimal)ViewBag.TotalRevenue).ToString("N0")) ₫</div></div></div></div>
+    <div class="col-md-6"><div class="card"><div class="card-body">
+        <div class="text-muted small">Giá vốn hàng đã bán (theo giá nhập của lô nguồn)</div>
+        <div class="fs-4 fw-bold">@(((decimal)ViewBag.TotalCostOfSold).ToString("N0")) ₫</div></div></div></div>
+</div>
+<h5>Doanh thu theo ngày</h5>
+<table class="table table-sm table-striped"><thead><tr><th>Ngày</th><th>Số hóa đơn</th><th>Doanh thu</th></tr></thead>
+<tbody>@foreach (var d in ViewBag.RevenueByDay) { <tr><td>@d.Date.ToString("dd/MM/yyyy")</td><td>@d.Count</td><td>@d.Revenue.ToString("N0") ₫</td></tr> }</tbody></table>
+<h5>Top thuốc bán chạy</h5>
+<table class="table table-sm table-striped"><thead><tr><th>Thuốc</th><th>Số lượng</th><th>Doanh thu</th></tr></thead>
+<tbody>@foreach (var t in ViewBag.TopMedicines) { <tr><td>@t.Name</td><td>@t.Quantity</td><td>@t.Revenue.ToString("N0") ₫</td></tr> }</tbody></table>
+<h5>Tồn kho theo lô</h5>
+<table class="table table-sm table-striped"><thead><tr><th>Thuốc</th><th>Số lô</th><th>HSD</th><th>Tồn</th><th>Giá nhập</th></tr></thead>
+<tbody>@foreach (var b in ViewBag.StockByBatch) { <tr><td>@b.Medicine?.Name</td><td>@b.BatchNumber</td><td>@b.ExpiryDate.ToString("dd/MM/yyyy")</td><td>@b.QuantityOnHand</td><td>@b.ImportPrice.ToString("N0") ₫</td></tr> }</tbody></table>

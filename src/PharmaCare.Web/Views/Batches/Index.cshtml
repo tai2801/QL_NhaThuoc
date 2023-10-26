@@ -1,0 +1,24 @@
+@model List<MedicineBatch>
+@{ ViewData["Title"] = "Lô & tồn kho"; var classify = (Func<DateOnly, ExpiryLevel>)ViewBag.Classify; }
+<h3 class="mb-3">Tồn kho theo lô (sắp xếp theo HSD — thứ tự FEFO)</h3>
+<div class="mb-3">
+    <a class="btn btn-sm btn-outline-secondary" asp-action="Index">Tất cả</a>
+    @foreach (var lv in Enum.GetValues<ExpiryLevel>())
+    { <a class="btn btn-sm btn-outline-danger" asp-action="Index" asp-route-level="@lv">@lv</a> }
+</div>
+<table class="table table-striped align-middle">
+    <thead><tr><th>Thuốc</th><th>Số lô</th><th>NSX</th><th>HSD</th><th>Nhập</th><th>Tồn</th><th>Giá nhập</th><th>Trạng thái</th><th>Mức hạn</th></tr></thead>
+    <tbody>
+    @foreach (var b in Model)
+    {
+        <tr>
+            <td>@b.Medicine?.Name</td><td class="fw-semibold">@b.BatchNumber</td>
+            <td>@b.ManufactureDate.ToString("dd/MM/yyyy")</td>
+            <td>@b.ExpiryDate.ToString("dd/MM/yyyy")</td>
+            <td>@b.QuantityReceived</td><td>@b.QuantityOnHand</td>
+            <td>@b.ImportPrice.ToString("N0") ₫</td><td>@b.Status</td>
+            <td><span class="badge badge-@classify(b.ExpiryDate).ToString().ToLower()">@classify(b.ExpiryDate)</span></td>
+        </tr>
+    }
+    </tbody>
+</table>

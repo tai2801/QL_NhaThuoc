@@ -1,0 +1,15 @@
+@model Prescription
+@{ ViewData["Title"] = "Nhập đơn thuốc"; }
+<h3>Nhập đơn thuốc</h3>
+<form method="post" class="row g-3 col-md-8">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="col-md-4"><label class="form-label">Mã đơn</label><input asp-for="Code" class="form-control" /><span asp-validation-for="Code" class="text-danger"></span></div>
+    <div class="col-md-8"><label class="form-label">Bệnh nhân</label><select asp-for="CustomerId" asp-items="ViewBag.Customers" class="form-select"></select></div>
+    <div class="col-md-6"><label class="form-label">Bác sĩ kê đơn</label><input asp-for="DoctorName" class="form-control" /></div>
+    <div class="col-md-6"><label class="form-label">Đơn vị kê đơn</label><input asp-for="IssuingUnit" class="form-control" /></div>
+    <div class="col-12"><label class="form-label">Chẩn đoán</label><input asp-for="Diagnosis" class="form-control" /></div>
+    <div class="col-md-6"><label class="form-label">Ngày kê</label><input asp-for="IssuedDate" type="date" class="form-control" /></div>
+    <div class="col-md-6"><label class="form-label">Hiệu lực đến</label><input asp-for="ValidUntil" type="date" class="form-control" /></div>
+    <div class="col-12"><button class="btn btn-primary">Lưu đơn</button> <a class="btn btn-link" asp-action="Index">Hủy</a></div>
+</form>
+<p class="text-muted small mt-3">Chi tiết thuốc trong đơn: thêm qua SQL/EF seed hoặc mở rộng form theo nhu cầu — bán theo đơn kiểm tra hiệu lực tại màn hình POS.</p>

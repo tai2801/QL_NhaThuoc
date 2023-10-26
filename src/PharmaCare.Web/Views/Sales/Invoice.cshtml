@@ -1,0 +1,28 @@
+@model SalesInvoice
+@{ ViewData["Title"] = "Hóa đơn " + Model.InvoiceCode; }
+<h3>Hóa đơn @Model.InvoiceCode</h3>
+<p class="text-muted">@Model.CreatedAt.ToString("dd/MM/yyyy HH:mm") · Khách: @(Model.Customer?.FullName ?? "Khách lẻ") · @Model.PaymentMethod</p>
+<table class="table table-striped">
+    <thead><tr><th>Thuốc</th><th>Lô nguồn</th><th>HSD lô</th><th>Số lượng</th><th>Đơn giá</th><th>Thành tiền</th><th>Trả hàng</th></tr></thead>
+    <tbody>
+    @foreach (var l in Model.Lines)
+    {
+        <tr>
+            <td>@l.Medicine?.Name</td><td class="fw-semibold">@l.Batch?.BatchNumber</td>
+            <td>@l.Batch?.ExpiryDate.ToString("dd/MM/yyyy")</td>
+            <td>@l.Quantity</td><td>@l.UnitPrice.ToString("N0") ₫</td><td>@l.LineTotal.ToString("N0") ₫</td>
+            <td>
+                <form method="post" asp-controller="Returns" asp-action="Create" class="d-flex gap-1">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="invoiceLineId" value="@l.Id" />
+                    <input type="number" name="quantity" value="1" min="1" max="@l.Quantity" class="form-control form-control-sm" style="width:70px" />
+                    <input type="text" name="reason" placeholder="Lý do trả" class="form-control form-control-sm" required />
+                    <label class="small"><input type="checkbox" name="isIntact" value="true" checked /> Nguyên vẹn</label>
+                    <button class="btn btn-sm btn-outline-warning">Trả</button>
+                </form>
+            </td>
+        </tr>
+    }
+    </tbody>
+    <tfoot><tr><td colspan="5" class="text-end fw-bold">Tổng cộng</td><td class="fw-bold">@Model.FinalAmount.ToString("N0") ₫</td><td></td></tr></tfoot>
+</table>

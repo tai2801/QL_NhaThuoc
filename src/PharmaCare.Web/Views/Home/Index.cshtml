@@ -1,0 +1,41 @@
+@model PharmaCare.Web.Models.ViewModels.DashboardViewModel
+@{ ViewData["Title"] = "Dashboard dược sĩ"; }
+<h3 class="mb-3">Dashboard dược sĩ</h3>
+<div class="row g-3 mb-4">
+    <div class="col-md-3"><div class="card"><div class="card-body">
+        <div class="text-muted small">Doanh thu hôm nay</div>
+        <div class="fs-4 fw-bold">@Model.RevenueToday.ToString("N0") ₫</div>
+        <div class="small">@Model.InvoicesToday hóa đơn</div></div></div></div>
+    <div class="col-md-3"><div class="card"><div class="card-body">
+        <div class="text-muted small">Doanh thu tháng này</div>
+        <div class="fs-4 fw-bold">@Model.RevenueThisMonth.ToString("N0") ₫</div></div></div></div>
+    <div class="col-md-3"><div class="card"><div class="card-body">
+        <div class="text-muted small">Mặt hàng thuốc / lô còn hàng</div>
+        <div class="fs-4 fw-bold">@Model.TotalMedicines / @Model.TotalBatchesInStock</div></div></div></div>
+    <div class="col-md-3"><div class="card"><div class="card-body">
+        <div class="text-muted small">Phiếu trả chờ duyệt</div>
+        <div class="fs-4 fw-bold">@Model.PendingReturns</div></div></div></div>
+</div>
+
+<h5>Cảnh báo hạn dùng (mốc 90 / 60 / 30 ngày)</h5>
+@if (Model.ExpiryAlerts.Count == 0) { <p class="text-muted">Không có lô nào cận hạn.</p> }
+else {
+<table class="table table-sm table-striped align-middle">
+    <thead><tr><th>Thuốc</th><th>Số lô</th><th>HSD</th><th>Còn (ngày)</th><th>Tồn lô</th><th>Mức</th></tr></thead>
+    <tbody>
+    @foreach (var a in Model.ExpiryAlerts)
+    {
+        <tr>
+            <td>@a.Medicine.Name</td><td>@a.Batch.BatchNumber</td>
+            <td>@a.Batch.ExpiryDate.ToString("dd/MM/yyyy")</td>
+            <td>@(a.DaysToExpiry < 0 ? "Đã hết hạn" : a.DaysToExpiry.ToString())</td>
+            <td>@a.QuantityOnHand</td>
+            <td><span class="badge badge-@a.Level.ToString().ToLower()">@a.Level</span></td>
+        </tr>
+    }
+    </tbody>
+</table> }
+
+<h5>Thuốc sắp hết hàng</h5>
+@if (Model.LowStockMedicineNames.Count == 0) { <p class="text-muted">Không có thuốc nào dưới ngưỡng đặt hàng.</p> }
+else { <ul>@foreach (var n in Model.LowStockMedicineNames) { <li>@n</li> }</ul> }

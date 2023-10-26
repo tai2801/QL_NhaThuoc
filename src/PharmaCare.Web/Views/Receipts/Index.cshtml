@@ -1,0 +1,20 @@
+@model List<StockReceipt>
+@{ ViewData["Title"] = "Phiếu nhập"; }
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Phiếu nhập hàng (mỗi dòng nhập = 1 lô mới)</h3>
+    <a class="btn btn-primary" asp-action="Create">+ Nhập hàng</a>
+</div>
+<table class="table table-striped align-middle">
+    <thead><tr><th>Mã phiếu</th><th>Ngày nhập</th><th>Nhà cung cấp</th><th>HĐ NCC</th><th>Chi tiết (Thuốc — Số lô — SL — Giá nhập)</th><th>Tổng giá trị</th></tr></thead>
+    <tbody>
+    @foreach (var r in Model)
+    {
+        <tr>
+            <td class="fw-semibold">@r.ReceiptCode</td><td>@r.ReceivedAt.ToString("dd/MM/yyyy")</td>
+            <td>@r.Supplier?.Name</td><td>@r.SupplierInvoiceNo</td>
+            <td class="small">@string.Join("; ", r.Lines.Select(l => $"{l.Medicine?.Name} — lô {l.Batch?.BatchNumber} — ×{l.Quantity} — {l.ImportPrice:N0}₫"))</td>
+            <td>@r.TotalImportValue.ToString("N0") ₫</td>
+        </tr>
+    }
+    </tbody>
+</table>

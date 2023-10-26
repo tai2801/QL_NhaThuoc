@@ -1,0 +1,16 @@
+@{ ViewData["Title"] = "Nhập hàng theo lô"; }
+<h3>Nhập hàng — tạo lô mới</h3>
+<form method="post" class="row g-3 col-md-8">
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="col-md-6"><label class="form-label">Nhà cung cấp</label><select name="supplierId" asp-items="ViewBag.Suppliers" class="form-select"></select></div>
+    <div class="col-md-6"><label class="form-label">Số hóa đơn NCC</label><input name="supplierInvoiceNo" class="form-control" /></div>
+    <div class="col-md-6"><label class="form-label">Thuốc</label><select name="medicineId" asp-items="ViewBag.Medicines" class="form-select"></select></div>
+    <div class="col-md-6"><label class="form-label">Số lô (nhà sản xuất)</label><input name="batchNumber" class="form-control" required /></div>
+    <div class="col-md-6"><label class="form-label">Ngày sản xuất</label><input name="manufactureDate" type="date" class="form-control" required /></div>
+    <div class="col-md-6"><label class="form-label">Hạn sử dụng</label><input name="expiryDate" type="date" class="form-control" required /></div>
+    <div class="col-md-6"><label class="form-label">Số lượng nhập</label><input name="quantity" type="number" min="1" class="form-control" required /></div>
+    <div class="col-md-6"><label class="form-label">Giá nhập / đơn vị</label><input name="importPrice" type="number" min="1" step="any" class="form-control" required /></div>
+    <div class="col-12"><button class="btn btn-primary">Nhập kho &amp; tạo lô</button> <a class="btn btn-link" asp-action="Index">Hủy</a></div>
+</form>
+<p class="text-muted small mt-2">Hệ thống từ chối nhận hàng đã hết hạn hoặc HSD không hợp lệ với NSX (ReceiptService).</p>

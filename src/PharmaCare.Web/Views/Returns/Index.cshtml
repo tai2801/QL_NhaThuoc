@@ -1,0 +1,32 @@
+@model List<SalesReturn>
+@{ ViewData["Title"] = "Trả thuốc"; }
+<h3 class="mb-3">Phiếu trả thuốc</h3>
+<table class="table table-striped align-middle">
+    <thead><tr><th>#</th><th>Hóa đơn</th><th>Ngày tạo</th><th>Lý do</th><th>Chi tiết</th><th>Trạng thái</th><th>Duyệt (Dược sĩ/Admin)</th></tr></thead>
+    <tbody>
+    @foreach (var r in Model)
+    {
+        <tr>
+            <td>@r.Id</td><td>@r.Invoice?.InvoiceCode</td>
+            <td>@r.CreatedAt.ToString("dd/MM/yyyy HH:mm")</td><td>@r.Reason</td>
+            <td class="small">@string.Join("; ", r.Lines.Select(l => $"dòng HĐ #{l.InvoiceLineId} ×{l.Quantity} ({(l.IsIntact ? "nguyên vẹn" : "không nguyên vẹn")})"))</td>
+            <td>@r.Status</td>
+            <td>
+            @if (r.Status == ReturnStatus.Pending && (User.IsInRole("Admin") || User.IsInRole("Pharmacist")))
+            {
+                <form method="post" asp-action="Decide" class="d-flex gap-1">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" value="@r.Id" />
+                    <select name="decision" class="form-select form-select-sm">
+                        <option value="ApprovedRestock">Duyệt — hoàn kho</option>
+                        <option value="ApprovedDestroy">Duyệt — tiêu hủy</option>
+                        <option value="Rejected">Từ chối</option>
+                    </select>
+                    <button class="btn btn-sm btn-primary">Duyệt</button>
+                </form>
+            }
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

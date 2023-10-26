@@ -1,0 +1,6 @@
+.bg-teal { background-color: #0f766e; }
+.badge-expired { background-color: #b91c1c; }
+.badge-critical { background-color: #dc2626; }
+.badge-warning { background-color: #d97706; }
+.badge-watch { background-color: #ca8a04; }
+.pos-qty { width: 90px; }

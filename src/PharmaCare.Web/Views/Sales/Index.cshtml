@@ -1,0 +1,47 @@
+@model PharmaCare.Web.Models.ViewModels.PosViewModel
+@{ ViewData["Title"] = "Bán thuốc (POS)"; }
+<h3 class="mb-3">Bán thuốc — FEFO tự xuất lô hạn gần nhất</h3>
+<form method="get" class="row g-2 mb-3">
+    <div class="col-md-6"><input name="q" value="@Model.Query" class="form-control" placeholder="Tìm nhanh theo tên, mã hoặc hoạt chất..." autofocus /></div>
+    <div class="col-md-2"><button class="btn btn-outline-secondary w-100">Tìm</button></div>
+</form>
+<form method="post" asp-action="Checkout">
+    @Html.AntiForgeryToken()
+    <table class="table table-striped align-middle">
+        <thead><tr><th>Mã</th><th>Thuốc</th><th>Giá</th><th>Tồn bán được</th><th>Lô xuất trước (FEFO)</th><th>Kê đơn</th><th style="width:120px">Số lượng</th></tr></thead>
+        <tbody>
+        @foreach (var r in Model.Results)
+        {
+            <tr>
+                <td>@r.Code</td>
+                <td class="fw-semibold">@r.Name <span class="text-muted small">@r.Strength</span></td>
+                <td>@r.SalePrice.ToString("N0") ₫/@r.Unit</td>
+                <td>@r.SellableStock</td>
+                <td class="small">@r.NextExpiryBatch</td>
+                <td>@(r.RequiresPrescription ? "Có" : "")</td>
+                <td>
+                    <input type="hidden" name="MedicineIds" value="@r.MedicineId" />
+                    <input type="number" name="Quantities" value="0" min="0" class="form-control pos-qty" />
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    <div class="row g-2 align-items-end">
+        <div class="col-md-4">
+            <label class="form-label">Đơn thuốc (bắt buộc nếu có thuốc kê đơn)</label>
+            <select name="PrescriptionId" class="form-select">
+                <option value="">— Không theo đơn —</option>
+                @foreach (var p in Model.ActivePrescriptions)
+                { <option value="@p.Id">@p.Code — @p.Customer?.FullName (BS @p.DoctorName)</option> }
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Thanh toán</label>
+            <select name="PaymentMethod" class="form-select">
+                <option>Cash</option><option>Card</option><option>Transfer</option>
+            </select>
+        </div>
+        <div class="col-md-3"><button class="btn btn-success w-100">Thanh toán &amp; xuất lô FEFO</button></div>
+    </div>
+</form>

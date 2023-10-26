@@ -1,0 +1,19 @@
+@model Medicine
+@{ ViewData["Title"] = "Sửa thuốc"; }
+<h3>Sửa thuốc</h3>
+<form method="post" class="row g-3 col-md-8">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="IsActive" />
+    <div class="col-md-4"><label class="form-label">Mã thuốc</label><input asp-for="Code" class="form-control" /><span asp-validation-for="Code" class="text-danger"></span></div>
+    <div class="col-md-8"><label class="form-label">Tên thuốc</label><input asp-for="Name" class="form-control" /></div>
+    <div class="col-md-6"><label class="form-label">Nhóm thuốc</label><select asp-for="CategoryId" asp-items="ViewBag.Categories" class="form-select"></select></div>
+    <div class="col-md-6"><label class="form-label">Dạng bào chế</label><select asp-for="DosageFormId" asp-items="ViewBag.DosageForms" class="form-select"></select></div>
+    <div class="col-md-4"><label class="form-label">Hàm lượng</label><input asp-for="Strength" class="form-control" /></div>
+    <div class="col-md-4"><label class="form-label">Đơn vị</label><input asp-for="Unit" class="form-control" /></div>
+    <div class="col-md-4"><label class="form-label">Số đăng ký</label><input asp-for="RegistrationNumber" class="form-control" /></div>
+    <div class="col-md-4"><label class="form-label">Giá bán</label><input asp-for="SalePrice" class="form-control" /></div>
+    <div class="col-md-4"><label class="form-label">Ngưỡng sắp hết</label><input asp-for="ReorderLevel" class="form-control" /></div>
+    <div class="col-md-4 form-check mt-5"><input asp-for="RequiresPrescription" class="form-check-input" /><label class="form-check-label">Thuốc kê đơn</label></div>
+    <div class="col-12"><button class="btn btn-primary">Lưu</button> <a class="btn btn-link" asp-action="Index">Hủy</a></div>
+</form>
